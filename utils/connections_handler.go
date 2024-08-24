@@ -15,7 +15,7 @@ var (
 	messages     = make(chan string)
 )
 
-func handleConnection(conn net.Conn) {
+func HandleConnection(conn net.Conn) {
 	conn.Write([]byte(readArt("./art.txt")))
 	conn.Write([]byte("[ENTER YOUR NAME]: "))
 
