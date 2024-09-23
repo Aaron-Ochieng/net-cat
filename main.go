@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("Failed to listen on port %s: %v", port, err)
 	}
 	defer listener.Close()
-	fmt.Printf("Listening on port %s\n", port)
+	fmt.Printf("Listening on port :%s\n", port)
 
 	go utils.HandleMessages()
 
