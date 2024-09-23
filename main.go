@@ -10,13 +10,15 @@ import (
 
 func main() {
 	args := os.Args[1:]
+	port := "8989"
 
-	if len(args) != 1 {
+	if len(args) > 1 {
 		fmt.Println("[USAGE]: ./TCPChat $port")
 		os.Exit(0)
+	} else if len(args) == 1 {
+		port = args[0]
 	}
 
-	port := args[0]
 	listener, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		log.Fatalf("Failed to listen on port %s: %v", port, err)
