@@ -1,5 +1,16 @@
-package net_cat
+package utils
 
-func notifyClients(notification string) {
-	messages <- notification
+import (
+	"net"
+)
+
+func Announce(msg string, senderConn net.Conn) {
+	chatSync.Lock()
+	defer chatSync.Unlock()
+
+	for conn := range users {
+		if conn != senderConn {
+			conn.Write([]byte(msg))
+		}
+	}
 }

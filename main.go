@@ -1,37 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	utils "net_cat/utils"
-	"os"
 )
 
 func main() {
-	args := os.Args[1:]
-
-	if len(args) != 1 {
-		fmt.Println("[USAGE]: ./TCPChat $port")
-		os.Exit(0)
-	}
-
-	port := args[0]
-	listener, err := net.Listen("tcp", ":"+port)
+	ln, err := net.Listen("tcp", ":9090")
 	if err != nil {
-		log.Fatalf("Failed to listen on port %s: %v", port, err)
+		log.Fatal(err.Error())
 	}
-	defer listener.Close()
-	fmt.Printf("Listening on port %s\n", port)
+	defer ln.Close()
 
-	go utils.HandleMessages()
+	log.Println("TCP server running on Port 9090")
 
 	for {
-		conn, err := listener.Accept()
+		conn, err := ln.Accept()
 		if err != nil {
-			log.Printf("Failed to accept connection: %v", err)
+			log.Println(err.Error())
 			continue
 		}
-		go utils.HandleConnection(conn)
+
+		go utils.HandleConn(conn)
 	}
 }

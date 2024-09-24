@@ -1,15 +1,10 @@
-package net_cat
+package utils
 
-import (
-	"fmt"
-	"os"
-)
+func BroadcastMessage(message string) {
+	chatSync.Lock()
+	defer chatSync.Unlock()
 
-func readArt(path string) []byte {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		fmt.Println(err)
-		return nil
+	for conn := range users {
+		conn.Write([]byte(message))
 	}
-	return content
 }
