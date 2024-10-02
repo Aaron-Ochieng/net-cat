@@ -34,6 +34,15 @@ func main() {
 			log.Printf("Failed to accept connection: %v", err)
 			continue
 		}
+		// Check if the maximum connection limit is reached
+		utils.ClientsMutex.Lock()
+		if len(utils.Clients) >= utils.MaxConnections {
+			utils.ClientsMutex.Unlock()
+			conn.Write([]byte("Chat is full. Please try again later.\n"))
+			conn.Close()
+			continue
+		}
+		utils.ClientsMutex.Unlock()
 		go utils.HandleConnection(conn)
 	}
 }
