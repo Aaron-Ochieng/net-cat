@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	clients      = make(map[net.Conn]Client)
-	clientsMutex sync.Mutex
+	Clients      = make(map[net.Conn]Client)
+	ClientsMutex sync.Mutex
 	messages     = make(chan string)
 )
 
@@ -28,11 +28,11 @@ func HandleConnection(conn net.Conn) {
 	name = strings.TrimSpace(name)
 
 	// Notify all clients that a new client has joined
-	clientsMutex.Lock()
-	clients[conn] = Client{conn, name}
-	clientsMutex.Unlock()
+	ClientsMutex.Lock()
+	Clients[conn] = Client{conn, name}
+	ClientsMutex.Unlock()
 
-	notifyClients(fmt.Sprintf("%s has joined the chat...", name))
+	notifyClients(fmt.Sprintf("%s has joined the chat...", name), conn)
 
 	// Send all previous messages to the newly joined client (optional)
 	// This would require storing messages in a slice or similar structure

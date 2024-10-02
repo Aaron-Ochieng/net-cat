@@ -6,12 +6,12 @@ import (
 )
 
 func removeClient(conn net.Conn) {
-	clientsMutex.Lock()
-	defer clientsMutex.Unlock()
+	ClientsMutex.Lock()
+	defer ClientsMutex.Unlock()
 
-	client, exists := clients[conn]
+	client, exists := Clients[conn]
 	if exists {
-		delete(clients, conn)
+		delete(Clients, conn)
 		notifyClients(fmt.Sprintf("%s has left the chat...", client.name), conn)
 		conn.Close()
 	}
