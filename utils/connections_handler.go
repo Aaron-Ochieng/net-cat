@@ -13,6 +13,7 @@ var (
 	Clients      = make(map[net.Conn]Client)
 	ClientsMutex sync.Mutex
 	messages     = make(chan string)
+	prevMessages []string // Slice to store previous messages
 )
 
 func HandleConnection(conn net.Conn) {
