@@ -35,6 +35,13 @@ func HandleConnection(conn net.Conn) {
 
 	notifyClients(fmt.Sprintf("%s has joined the chat...", name), conn)
 
+	// Load all the previous messages for the newClient
+	ClientsMutex.Lock()
+	for _, message := range prevMessages {
+		conn.Write([]byte(message + "\n"))
+	}
+	ClientsMutex.Unlock()
+
 	// Send all previous messages to the newly joined client (optional)
 	// This would require storing messages in a slice or similar structure
 
