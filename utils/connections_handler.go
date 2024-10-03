@@ -48,6 +48,8 @@ func HandleConnection(conn net.Conn) {
 	for {
 		message, err := reader.ReadString('\n')
 		if err != nil {
+			// Notify all clients that this user has left
+			notifyClients(fmt.Sprintf("%s has left the chat...", name), conn)
 			removeClient(conn)
 			return
 		}
