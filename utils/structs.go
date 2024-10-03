@@ -8,3 +8,8 @@ type Client struct {
 }
 
 const MaxConnections = 10 // Define the maximum number of connections
+
+type Message struct {
+	messageText string
+	senderConn  net.Conn
+}
