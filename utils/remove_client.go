@@ -12,7 +12,7 @@ func removeClient(conn net.Conn) {
 	client, exists := Clients[conn]
 	if exists {
 		delete(Clients, conn)
-		notifyClients(fmt.Sprintf("%s has left the chat...", client.name), conn)
+		notifyClients(fmt.Sprintf("%s has left the chat...", client.name), nil)
 		conn.Close()
 	}
 }
