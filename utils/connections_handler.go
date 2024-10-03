@@ -12,7 +12,7 @@ import (
 var (
 	Clients      = make(map[net.Conn]Client)
 	ClientsMutex sync.Mutex
-	messages     = make(chan string)
+	messages     = make(chan Message)
 	prevMessages []string // Slice to store previous messages
 )
 
@@ -59,6 +59,7 @@ func HandleConnection(conn net.Conn) {
 
 		timestamp := time.Now().Format("2006-01-02 15:04:05")
 		formattedMessage := fmt.Sprintf("[%s][%s]: %s", timestamp, name, message)
-		messages <- formattedMessage
+		// Notify other clients about the message
+		messages <- Message{messageText: formattedMessage, senderConn: conn} // Send message and sender's connection
 	}
 }
