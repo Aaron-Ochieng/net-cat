@@ -1,18 +1,18 @@
 package net_cat
 
-func HandleMessages() {
-	for message := range messages {
-		ClientsMutex.Lock()
-
+func (s *Server) handleMessages() {
+	for message := range s.messages {
 		// Store all the messages to prevMessages slice []string
-		prevMessages = append(prevMessages, message.messageText)
+		s.prevMessages = append(s.prevMessages, message.messageText)
+
+		s.clientMutex.Lock()
 		formattedMessage, senderConn := message.messageText, message.senderConn
-		for conn, client := range Clients {
+		for conn, client := range s.clients {
 			// Skip the sender
 			if conn != senderConn {
 				client.conn.Write([]byte(formattedMessage + "\n"))
 			}
 		}
-		ClientsMutex.Unlock()
+		s.clientMutex.Unlock()
 	}
 }
