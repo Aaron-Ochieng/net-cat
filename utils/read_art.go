@@ -3,6 +3,7 @@ package net_cat
 import (
 	"bufio"
 	"log"
+	"net"
 	"os"
 )
 
@@ -20,4 +21,8 @@ func readArt(filename string) (art string) {
 		art += scanner.Text() + "\n"
 	}
 	return
+}
+
+func displayArt(conn net.Conn) {
+	conn.Write([]byte(readArt("art.txt")))
 }
