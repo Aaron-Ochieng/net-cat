@@ -41,6 +41,6 @@ func (s *Server) acceptConnections() {
 			conn.Close()
 			continue
 		}
-
+		go s.readLoop(conn)
 	}
 }
