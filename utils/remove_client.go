@@ -4,13 +4,12 @@ import (
 	"net"
 )
 
-func removeClient(conn net.Conn) {
-	ClientsMutex.Lock()
-	defer ClientsMutex.Unlock()
-
-	_, exists := Clients[conn]
+func (s *Server) removeClient(conn net.Conn) {
+	s.clientMutex.Lock()
+	_, exists := s.clients[conn]
 	if exists {
-		delete(Clients, conn)
-		conn.Close()
+		delete(s.clients, conn)
 	}
+	s.clientMutex.Unlock()
+	conn.Close()
 }
