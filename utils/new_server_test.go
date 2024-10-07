@@ -41,3 +41,26 @@ func TestSeverStart(t *testing.T) {
 	}
 	conn.Close()
 }
+
+func TestServer_acceptConnections(t *testing.T) {
+	server := NewServer(":8989")
+	go server.Start()
+
+	time.Sleep(100 * time.Millisecond)
+
+	conn, err := net.Dial("tcp", ":8989")
+	if err != nil {
+		t.Fatalf("Failed to connect to server: %v", err)
+	}
+	defer conn.Close()
+
+	time.Sleep(100 * time.Millisecond)
+
+	server.clientMutex.Lock()
+	_, exists := server.clients[conn]
+	server.clientMutex.Unlock()
+
+	if exists {
+		t.Errorf("Client should not be in clients map before receiving name")
+	}
+}
