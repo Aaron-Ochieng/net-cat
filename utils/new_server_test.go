@@ -2,6 +2,7 @@ package net_cat
 
 import (
 	"net"
+	"strings"
 	"testing"
 	"time"
 )
@@ -40,4 +41,50 @@ func TestSeverStart(t *testing.T) {
 		t.Errorf("Failed to connect to server: %v", err)
 	}
 	conn.Close()
+}
+
+func TestServer_acceptConnections(t *testing.T) {
+	server := NewServer(":8989")
+	go server.Start()
+
+	time.Sleep(100 * time.Millisecond)
+
+	conn, err := net.Dial("tcp", ":8989")
+	if err != nil {
+		t.Fatalf("Failed to connect to server: %v", err)
+	}
+	defer conn.Close()
+
+	time.Sleep(100 * time.Millisecond)
+
+	server.clientMutex.Lock()
+	_, exists := server.clients[conn]
+	server.clientMutex.Unlock()
+
+	if exists {
+		t.Errorf("Client should not be in clients map before receiving name")
+	}
+}
+
+func TestMaxConnections(t *testing.T) {
+	server := NewServer(":8989")
+
+	go server.Start()
+
+	for i := 0; i <= 9; i++ {
+		conn, err := net.Dial("tcp", ":8989")
+		if err != nil {
+			t.Fatalf("Failed to connect to server: %v", err)
+		}
+		defer conn.Close()
+
+		if i >= 10 {
+			buf := make([]byte, 1024)
+			n, _ := conn.Read(buf)
+			response := string(buf[:n])
+			if !strings.Contains(response, "Chat is full") {
+				t.Errorf("Expected 'Chat is full' message, got: %s", response)
+			}
+		}
+	}
 }
