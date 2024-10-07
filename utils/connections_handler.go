@@ -65,3 +65,21 @@ func HandleConnection(conn net.Conn) {
 		messages <- Message{messageText: formattedMessage, senderConn: conn} // Send message and sender's connection
 	}
 }
+
+func (s *Server) readLoop(conn net.Conn) {
+	reader := bufio.NewReader(conn)
+	defer conn.Close()
+	for {
+		message, err := reader.ReadString('\n')
+		if err != nil {
+			return
+		}
+
+		message = strings.TrimSpace(message)
+		if message == "" {
+			continue
+		}
+
+		s.messages <- Message{messageText: message, senderConn: nil}
+	}
+}
