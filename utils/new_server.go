@@ -20,8 +20,10 @@ func (s *Server) Start() error {
 		return err
 	}
 	defer ln.Close()
+	s.listener = ln
 	fmt.Printf("Listening on port %s\n", s.listeningAddr)
-	// go s.acceptConnections()
+	go s.handleMessages()
+	s.acceptConnections()
 	<-s.messages
 	return nil
 }
@@ -41,6 +43,6 @@ func (s *Server) acceptConnections() {
 			conn.Close()
 			continue
 		}
-
+		go s.readLoop(conn)
 	}
 }
