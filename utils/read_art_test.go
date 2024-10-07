@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"testing"
 	"time"
 )
 
@@ -35,3 +36,13 @@ func (m *MockConn) RemoteAddr() net.Addr               { return nil }
 func (m *MockConn) SetDeadline(t time.Time) error      { return nil }
 func (m *MockConn) SetReadDeadline(t time.Time) error  { return nil }
 func (m *MockConn) SetWriteDeadline(t time.Time) error { return nil }
+
+func TestDisplayArt(t *testing.T) {
+	mockConn := &MockConn{}
+	displayArt(mockConn)
+
+	artText := mockConn.buf.String()
+	if !strings.Contains(artText, "Welcome to TCP-Chat!") {
+		t.Errorf("Expected ASCII art in output, got: %s", artText)
+	}
+}
