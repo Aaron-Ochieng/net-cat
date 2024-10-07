@@ -5,15 +5,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"sync"
 	"time"
-)
-
-var (
-	Clients      = make(map[net.Conn]Client)
-	ClientsMutex sync.Mutex
-	messages     = make(chan Message)
-	prevMessages []string // Slice to store previous messages
 )
 
 func (s *Server) getUserName(conn net.Conn) string {
