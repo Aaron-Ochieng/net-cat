@@ -32,5 +32,13 @@ func (s *Server) acceptConnections() {
 			continue
 		}
 
+		// check if the max number of connections limit is reached
+		if len(s.clients) >= MaxConnections {
+			s.clientMutex.Unlock()
+			conn.Write([]byte("Chatroom is full. Please try again later.\n"))
+			conn.Close()
+			continue
+		}
+
 	}
 }
