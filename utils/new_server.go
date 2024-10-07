@@ -2,6 +2,7 @@ package net_cat
 
 import (
 	"fmt"
+	"log"
 	"net"
 )
 
@@ -21,4 +22,15 @@ func (s *Server) Start() error {
 	defer ln.Close()
 	fmt.Println("Listening on port %s\n", s.listeningAddr)
 	return nil
+}
+
+func (s *Server) acceptConnections() {
+	for {
+		conn, err := s.listener.Accept()
+		if err != nil {
+			log.Print(err)
+			continue
+		}
+
+	}
 }
