@@ -1,7 +1,9 @@
 package net_cat
 
 import (
+	"net"
 	"testing"
+	"time"
 )
 
 func TestNewServer(t *testing.T) {
@@ -20,7 +22,7 @@ func TestNewServer(t *testing.T) {
 	}
 }
 
-func TestSeverStart(t testing.T) {
+func TestSeverStart(t *testing.T) {
 	server := NewServer(":8989")
 
 	go func() {
@@ -29,4 +31,13 @@ func TestSeverStart(t testing.T) {
 			t.Errorf("Server failed to start: %v", err)
 		}
 	}()
+
+	// Allow for the server to start
+	time.Sleep(300 * time.Millisecond)
+
+	conn, err := net.Dial("tcp", ":8989")
+	if err != nil {
+		t.Errorf("Failed to connect to server: %v", err)
+	}
+	conn.Close()
 }
