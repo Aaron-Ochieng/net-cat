@@ -21,6 +21,8 @@ func (s *Server) Start() error {
 	}
 	defer ln.Close()
 	fmt.Printf("Listening on port %s\n", s.listeningAddr)
+	// go s.acceptConnections()
+	<-s.messages
 	return nil
 }
 
