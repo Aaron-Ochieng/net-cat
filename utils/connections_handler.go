@@ -16,6 +16,29 @@ var (
 	prevMessages []string // Slice to store previous messages
 )
 
+func (s *Server) getUserName(conn net.Conn) string {
+	// Display the art text
+	displayArt(conn)
+
+	// prompt username
+	conn.Write([]byte("[ENTER YOUR NAME]: "))
+
+	reader := bufio.NewReader(conn)
+	name, err := reader.ReadString('\n')
+	if err != nil || strings.TrimSpace(name) == "" {
+		conn.Close()
+		return ""
+	}
+	name = strings.TrimSpace(name)
+
+	s.clientMutex.Lock()
+	s.clients[conn] = Client{conn, name}
+	s.clientMutex.Unlock()
+
+	s.notifyClients(fmt.Sprintf("%s has joined the chat...", name), conn)
+	return name
+}
+
 func HandleConnection(conn net.Conn) {
 	conn.Write([]byte(readArt("./art.txt")))
 	conn.Write([]byte("[ENTER YOUR NAME]: "))
