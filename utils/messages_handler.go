@@ -13,6 +13,9 @@ func (s *Server) handleMessages() {
 			// Skip the sender
 			if conn != senderConn {
 				client.conn.Write([]byte(formattedMessage))
+			} else {
+				client.conn.Write([]byte(clear))
+				client.conn.Write([]byte(formattedMessage))
 			}
 		}
 		s.clientMutex.Unlock()
