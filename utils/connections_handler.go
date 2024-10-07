@@ -109,6 +109,9 @@ func (s *Server) readLoop(conn net.Conn) {
 	for {
 		message, err := reader.ReadString('\n')
 		if err != nil {
+			// Notify all clients that the user has left
+			s.notifyClients(fmt.Sprintf("%s has left the chat...", name), conn)
+			s.removeClient(conn)
 			return
 		}
 
