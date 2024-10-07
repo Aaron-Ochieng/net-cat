@@ -98,6 +98,12 @@ func (s *Server) loadPrevMessages(conn net.Conn) {
 }
 
 func (s *Server) readLoop(conn net.Conn) {
+	// Get the connection username
+	name := s.getUserName(conn)
+
+	// Load all the prevmessages to the user upon sucessful connection
+	s.loadPrevMessages(conn)
+
 	reader := bufio.NewReader(conn)
 	defer conn.Close()
 	for {
@@ -111,6 +117,8 @@ func (s *Server) readLoop(conn net.Conn) {
 			continue
 		}
 
-		s.messages <- Message{messageText: message, senderConn: nil}
+		timestamp := time.Now().Format("2006-01-02 15:04:05")
+		formattedMessage := fmt.Sprintf("[%s][%s]: %s", timestamp, name, message)
+		s.messages <- Message{messageText: formattedMessage, senderConn: conn}
 	}
 }
