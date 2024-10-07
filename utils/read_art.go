@@ -1,15 +1,23 @@
 package net_cat
 
 import (
-	"fmt"
+	"bufio"
+	"log"
 	"os"
 )
 
-func readArt(path string) []byte {
-	content, err := os.ReadFile(path)
+func readArt(filename string) (art string) {
+	file, err := os.Open(filename)
+
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		log.Println(err)
 	}
-	return content
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		art += scanner.Text() + "\n"
+	}
+	return
 }
