@@ -19,3 +19,14 @@ func TestNewServer(t *testing.T) {
 		}
 	}
 }
+
+func TestSeverStart(t testing.T) {
+	server := NewServer(":8989")
+
+	go func() {
+		err := server.Start()
+		if err != nil {
+			t.Errorf("Server failed to start: %v", err)
+		}
+	}()
+}
