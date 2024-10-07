@@ -20,7 +20,7 @@ func (s *Server) Start() error {
 		return err
 	}
 	defer ln.Close()
-	fmt.Println("Listening on port %s\n", s.listeningAddr)
+	fmt.Printf("Listening on port %s\n", s.listeningAddr)
 	return nil
 }
 
