@@ -89,6 +89,14 @@ func HandleConnection(conn net.Conn) {
 	}
 }
 
+func (s *Server) loadPrevMessages(conn net.Conn) {
+	s.clientMutex.Lock()
+	for _, message := range s.prevMessages {
+		conn.Write([]byte(message + "\n"))
+	}
+	s.clientMutex.Unlock()
+}
+
 func (s *Server) readLoop(conn net.Conn) {
 	reader := bufio.NewReader(conn)
 	defer conn.Close()
