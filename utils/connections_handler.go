@@ -66,7 +66,7 @@ func (s *Server) readLoop(conn net.Conn) {
 			// clear the last input empty line
 			conn.Write([]byte(clear))
 			// Wrtite the empty message only to the user who sent it
-			conn.Write([]byte(formattedMessage))
+			conn.Write([]byte(formattedMessage + "\n"))
 			continue
 		}
 

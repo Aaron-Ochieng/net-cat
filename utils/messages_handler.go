@@ -12,10 +12,10 @@ func (s *Server) handleMessages() {
 		for conn, client := range s.clients {
 			// Skip the sender
 			if conn != senderConn {
-				client.conn.Write([]byte(formattedMessage))
+				client.conn.Write([]byte(formattedMessage + "\n"))
 			} else {
 				client.conn.Write([]byte(clear))
-				client.conn.Write([]byte(formattedMessage))
+				client.conn.Write([]byte(formattedMessage + "\n"))
 			}
 		}
 		s.clientMutex.Unlock()
