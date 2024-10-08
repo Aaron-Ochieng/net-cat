@@ -58,12 +58,18 @@ func (s *Server) readLoop(conn net.Conn) {
 		}
 
 		message = strings.TrimSpace(message)
-		if message == "" {
-			continue
-		}
 
 		timestamp := time.Now().Format("2006-01-02 15:04:05")
 		formattedMessage := fmt.Sprintf("[%s][%s]: %s", timestamp, name, message)
+
+		if message == "" {
+			// clear the last input empty line
+			conn.Write([]byte(clear))
+			// Wrtite the empty message only to the user who sent it
+			conn.Write([]byte(formattedMessage + "\n"))
+			continue
+		}
+
 		s.messages <- Message{messageText: formattedMessage, senderConn: conn}
 	}
 }
